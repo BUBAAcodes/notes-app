@@ -23,39 +23,38 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { signInUser, signUpUser } from "@/server/user";
+import { signInUser } from "@/server/user";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { authclient } from "@/lib/auth-client";
 
 const formSchema = z.object({
-  email: z.email(),
   password: z.string().min(8),
-  confirmPassword:z.string().min(8),
-  name: z.string().min(1),
+  confirmPassword: z.string().min(8),
 });
 
-export function SignupForm({
+export function ResetPasswordForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
   const router = useRouter();
 
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token");
+
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
       password: "",
-      confirmPassword:"",
-      name:"",
+      confirmPassword: "",
     },
   });
 
-  const signup = async () => {
+  const signIn = async () => {
     await authclient.signIn.social({
       provider: "google",
       callbackURL: "/dashboard",
@@ -67,17 +66,19 @@ export function SignupForm({
       setIsLoading(true);
       
       if(values.password !== values.confirmPassword){
-              toast.error("[passwords do not match]");  
-              return;      
-            }
+        toast.error("[passwords do not match]");  
+        return;      
+      }
 
-      const response = await signUpUser(values.email, values.password, values.name );
-      if (response.success) {
-        toast.success("Please check your email for verification.");
-        router.push("/dashboard");
-       
+      const {error} = await authclient.resetPassword({
+        newPassword : values.password,
+        token:token?? "",
+      });
+      if (!error) {
+        toast.success("Password reset successfully");
+        router.push("/login");
       } else {
-        toast.error(response.message);
+        toast.error(error.message);
       }
     } catch (error) {
       console.error(error);
@@ -90,9 +91,9 @@ export function SignupForm({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
-          <CardTitle>Create an account</CardTitle>
+          <CardTitle>Reset your password</CardTitle>
           <CardDescription>
-            Enter your details below to create an account
+            Enter your new passwrod below to resest your password
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -102,43 +103,10 @@ export function SignupForm({
                 <div className="grid gap-3">
                   <FormField
                     control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email</FormLabel>
-                        <FormControl>
-                          <Input placeholder="santosh@example.com" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="grid gap-3">
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Name</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Santosh Kumar" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="grid gap-3">
-                  <FormField
-                    control={form.control}
                     name="password"
                     render={({ field }) => (
                       <FormItem>
-                        <div className="flex items-center">
-                          <FormLabel>Password</FormLabel>
-                          
-                        </div>
+                        <FormLabel>Password</FormLabel>
                         <FormControl>
                           <Input
                             type="password"
@@ -157,9 +125,7 @@ export function SignupForm({
                     name="confirmPassword"
                     render={({ field }) => (
                       <FormItem>
-                        <div className="flex items-center">
-                          <FormLabel>Confirm Password</FormLabel>
-                        </div>
+                        <FormLabel>Confirm Password</FormLabel>
                         <FormControl>
                           <Input
                             type="password"
@@ -177,23 +143,23 @@ export function SignupForm({
                     {isLoading ? (
                       <Loader2 className="size-4 animate-spin" />
                     ) : (
-                      "Sign up"
+                      "Reset Password"
                     )}
                   </Button>
                   <Button
                     variant="outline"
                     className="w-full"
-                    onClick={signup}
+                    onClick={signIn}
                     type="button"
                   >
-                    Sign up with Google
+                    Login with Google
                   </Button>
                 </div>
               </div>
               <div className="mt-4 text-center text-sm">
-                Already have an account?{" "}
-                <Link href="/login" className="underline underline-offset-4">
-                  Login
+                Don&apos;t have an account?{" "}
+                <Link href="/signup" className="underline underline-offset-4">
+                  Sign up
                 </Link>
               </div>
             </form>

@@ -63,7 +63,7 @@ export function LoginForm({
       setIsLoading(true);
       const response = await signInUser(values.email, values.password);
       if (response.success) {
-        toast.success(response.message);
+        toast.success("Successfully logged in");
         router.push("/dashboard");
       } else {
         toast.error(response.message);
