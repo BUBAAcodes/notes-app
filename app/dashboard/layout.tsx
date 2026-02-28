@@ -1,6 +1,6 @@
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import App from "next/app";
+
 
 export default function DashboardLayout({
     children,
@@ -11,7 +11,7 @@ export default function DashboardLayout({
     return <div>
         <SidebarProvider>
             <AppSidebar />
-           <main>
+           <main className="flex-1">
             
             {children}
             </main>

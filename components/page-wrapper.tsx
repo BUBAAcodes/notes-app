@@ -5,6 +5,8 @@ import {
   BreadcrumbList,
 } from "@/components/ui/breadcrumb"
 import { SidebarTrigger } from "./ui/sidebar";
+import { Logout } from "./logout";
+import { ModeToggle } from "./mode-toggle";
 interface PageWrapperProps {
   children: React.ReactNode;
 breadcrumbs:{
@@ -15,8 +17,10 @@ breadcrumbs:{
 
 export function PageWrapper({children,breadcrumbs}:PageWrapperProps) {
     return (
-        <div className="flex flex-col gap-4">
-        <header className="flex items-center gap-4 px-4 py-2">
+        <div className="flex flex-col gap-4 ">
+        <header className="flex items-center px-4 py-2 border-b">
+          <div className="flex items-center gap-4 justify-between w-full">
+          <div className="flex items-center gap-4">
           <SidebarTrigger/>
             <Breadcrumb>
   <BreadcrumbList>
@@ -27,8 +31,16 @@ export function PageWrapper({children,breadcrumbs}:PageWrapperProps) {
     ))}
   </BreadcrumbList>
 </Breadcrumb>
+</div>
+   <div className="flex items-center gap-4">
+      <ModeToggle/>
+      <Logout/>
+   </div>
+</div>
+
 </header>
-  {children}  
+<div className="flex flex-1 flex-col gap-4 p-4 pt-0">{children}</div>
+    
         </div>
         
     );
