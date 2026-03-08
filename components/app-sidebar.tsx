@@ -41,7 +41,7 @@ export async function AppSidebar({ ...props }: React.ComponentProps<typeof Sideb
       })) ?? []),
   ],
 }
-  return (
+  return (            
     <Sidebar {...props}>
       <SidebarHeader>
         <VersionSwitcher

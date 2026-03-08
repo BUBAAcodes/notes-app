@@ -3,10 +3,12 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
+  BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import { SidebarTrigger } from "./ui/sidebar";
 import { Logout } from "./logout";
 import { ModeToggle } from "./mode-toggle";
+import { Fragment } from "react/jsx-runtime";
 interface PageWrapperProps {
   children: React.ReactNode;
 breadcrumbs:{
@@ -24,10 +26,15 @@ export function PageWrapper({children,breadcrumbs}:PageWrapperProps) {
           <SidebarTrigger/>
             <Breadcrumb>
   <BreadcrumbList>
-    {breadcrumbs.map ((breadcrumb) =>(
+    {breadcrumbs.map ((breadcrumb,index) =>(
+      <Fragment key={breadcrumb.label}>
       <BreadcrumbItem key={breadcrumb.href}>
         <BreadcrumbLink href={breadcrumb.href}>{breadcrumb.label}</BreadcrumbLink>
       </BreadcrumbItem>
+      {index !== breadcrumbs.length - 1 && (
+        <BreadcrumbSeparator />
+        )}
+        </Fragment>
     ))}
   </BreadcrumbList>
 </Breadcrumb>

@@ -1,26 +1,27 @@
+
 "use server";
+
 import { db } from "@/db/drizzle";
-import { InsertNote, notes} from "@/db/schema";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
+import { InsertNote, notes } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
-export const createNote = async (values:InsertNote) => {
+export const createNote = async (values: InsertNote) => {
     try {
-        
-         await db.insert(notes).values(values);
-         return {success:true, message:"Notebook created succefully"};
-
-    } catch (error) {
-        return {success:false,message:"Failed to create notebook"};
+        await db.insert(notes).values(values);
+        return { success: true, message: "Note created successfully" };
+    } catch {
+        return { success: false, message: "Failed to create notebook" };
     }
 };
 
-
-
 export const getNoteById = async (id: string) => {
     try {
-        const note = await db.select().from(notes).where(eq(notes.id, id));
+        const note = await db.query.notes.findFirst({
+            where: eq(notes.id, id),
+            with: {
+                notebook: true
+            }
+        });
 
         return { success: true, note };
     } catch {
@@ -28,21 +29,20 @@ export const getNoteById = async (id: string) => {
     }
 };
 
-
-export const updateNote= async (id:string, values:InsertNote) => {
+export const updateNote = async (id: string, values: Partial<InsertNote>) => {
     try {
-        await db.update(notes).set(values).where(eq(notes.id,id));
-        return {success:true, message:"Notebook updated successfully"};
-    } catch (error) {
-        return {success:false, message:"Failed to update notebook"};
+        await db.update(notes).set(values).where(eq(notes.id, id));
+        return { success: true, message: "Notebook updated successfully" };
+    } catch {
+        return { success: false, message: "Failed to update notebook" };
     }
 };
 
-export const deleteNote = async (id:string) => { 
+export const deleteNote = async (id: string) => {
     try {
-        await db.delete(notes).where(eq(notes.id,id));
-        return {success:true, message:"Notebook deleted successfully"};
-    } catch (error) {
-        return {success:false, message:"failed to delete notebook"};
+        await db.delete(notes).where(eq(notes.id, id));
+        return { success: true, message: "Notebook deleted successfully" };
+    } catch {
+        return { success: false, message: "Failed to delete notebook" };
     }
 };
