@@ -1,21 +1,16 @@
 'use client'
 import Link from 'next/link'
-import { Logo } from '@/components/logo'
 import { Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import React from 'react'
 import { cn } from '@/lib/utils'
 import { useScroll } from 'motion/react'
-import { ModeToggle } from './mode-toggle'
 import Image from "next/image";
+import { ModeSwitcher } from './mode-switcher'
 
 
-const menuItems = [
-    { name: 'Features', href: '#link' },
-    { name: 'Solution', href: '#link' },
-    { name: 'Pricing', href: '#link' },
-    { name: 'About', href: '#link' },
-]
+const menuItems: { name: string; href: string }[] = [];
+
 
 export const HeroHeader = () => {
     const [menuState, setMenuState] = React.useState(false)
@@ -89,7 +84,7 @@ export const HeroHeader = () => {
                                 </ul>
                             </div>
                             <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit">
-                                <ModeToggle />
+                                <ModeSwitcher />
                                 <Button
                                     asChild
                                     variant="outline"
