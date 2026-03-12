@@ -31,7 +31,7 @@ export async function AppSidebar({ ...props }: React.ComponentProps<typeof Sideb
     <Sidebar {...props}>
       <SidebarHeader>
         <div className="flex items-center space-x-2">
-    <Image src="/notliy.png" alt="Logo" width={40} height={40} />    
+    <Image src="/sotliy.png" alt="Logo" width={40} height={40} />    
     <h2 >Notliy</h2>
     </div>
     <React.Suspense>
