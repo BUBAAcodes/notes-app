@@ -1,4 +1,5 @@
 import * as React from "react"
+import { Suspense } from "react"
 import Image from "next/image";
 import { SearchForm } from "@/components/search-form"
 import {
@@ -33,7 +34,9 @@ export async function AppSidebar({ ...props }: React.ComponentProps<typeof Sideb
     <Image src="/notliy.png" alt="Logo" width={40} height={40} />    
     <h2 >Notliy</h2>
     </div>
+    <React.Suspense>
         <SearchForm />
+      </React.Suspense>
       </SidebarHeader>
       <SidebarContent className="gap-0">
        
